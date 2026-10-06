@@ -3,10 +3,9 @@ package com.ejemplo.crud.controller;
 import com.ejemplo.crud.Entity.CursoEntity;
 import com.ejemplo.crud.Service.CursoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -15,16 +14,36 @@ import java.util.List;
 public class CursoController {
     @Autowired
     private CursoService cursoService;
-    @GetMapping("/prueba")
-    public List<CursoEntity> findAll(){
-        CursoEntity cursoEntity = new CursoEntity();
-        cursoEntity.setCodigo("123456");
-        cursoEntity.setNombre("Java");
-        cursoEntity.setDescripcion("Curso de Java");
-        cursoEntity.setEstado("Activo");
-        cursoService.save(cursoEntity);
-        return cursoService.findAll();
+    @GetMapping()
+    public ResponseEntity<List<CursoEntity>> findAll(){
+
+        return new ResponseEntity<>(cursoService.findAll(), org.springframework.http.HttpStatus.OK);
     }
+    @PostMapping
+    public ResponseEntity<CursoEntity> save(@RequestBody CursoEntity cursoEntity){
+        return new ResponseEntity<>(cursoService.save(cursoEntity), org.springframework.http.HttpStatus.CREATED);
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<CursoEntity> findById(Long id){
+        return new ResponseEntity<>(cursoService.findById(id).get(), org.springframework.http.HttpStatus.OK);
+    }
+    @GetMapping("/estado/{estado}")
+    public ResponseEntity<List<CursoEntity>> findByEstado(String estado){
+        return new ResponseEntity<>(cursoService.findByEstado(estado), org.springframework.http.HttpStatus.OK);
+    }
+    @GetMapping("/nombre/{nombre}")
+    public ResponseEntity<List<CursoEntity>> findByNombre(String nombre){
+        return new ResponseEntity<>(cursoService.findByNombre(nombre), org.springframework.http.HttpStatus.OK);
+    }
+    @GetMapping("/descripcion/{descripcion}")
+    public ResponseEntity<List<CursoEntity>> findByDescripcion(String descripcion){
+        return new ResponseEntity<>(cursoService.findByDescripcion(descripcion), org.springframework.http.HttpStatus.OK);
+    }
+    @GetMapping("/codigo/{codigo}")
+    public ResponseEntity<CursoEntity> findByCodigo(String codigo){
+        return new ResponseEntity<>(cursoService.findByCodigo(codigo).get(), org.springframework.http.HttpStatus.OK);
+    }
+
 
 
 }
